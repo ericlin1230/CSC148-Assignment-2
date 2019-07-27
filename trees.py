@@ -6,7 +6,7 @@ class OutOfBoundsError(Exception):
     pass
 
 
-class Tree:
+class Tree
     def __contains__(self, name: str) -> bool:
         """ Return True if a player named <name> is stored in this tree.
 
