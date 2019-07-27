@@ -221,7 +221,8 @@ class QuadTree(Tree):
 
         Runtime: O(log(n))
         """
-
+        if point[0] > self._centre[0] * 2 or point[1] > self._centre[1] * 2:
+            raise OutOfBoundsError
         if self.contains_point(point):
             raise OutOfBoundsError
         step = int(self._centre[0] / 2)
