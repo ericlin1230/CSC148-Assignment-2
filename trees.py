@@ -226,8 +226,8 @@ class QuadTree(Tree):
             if self.is_empty() or self._se == []:
                 newquad = QuadTree(
                     (self._centre[0] + step, self._centre[1] + step))
-                newquad._name = name
                 self._se = newquad
+                newquad._name = name
             else:
                 self._se.insert(name, point)
         elif directions(self._centre, point) == 1:
