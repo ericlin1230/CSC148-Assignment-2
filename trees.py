@@ -219,6 +219,8 @@ class QuadTree(Tree):
 
         Runtime: O(log(n))
         """
+        if self.contains_point(point):
+            raise OutOfBoundsError
         step = int(self._centre[0] / 2)
         if directions(self._centre, point) == 4:
             if self.is_empty() or self._se == []:
