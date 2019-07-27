@@ -174,6 +174,8 @@ class QuadTree(Tree):
         self._ne = []
         self._nw = []
         self._sw = []
+        self._name = ""
+        self._point = ()
 
     def __contains__(self, name: str) -> bool:
         """ Return True if a player named <name> is stored in this tree.
@@ -219,6 +221,7 @@ class QuadTree(Tree):
 
         Runtime: O(log(n))
         """
+
         if self.contains_point(point):
             raise OutOfBoundsError
         step = int(self._centre[0] / 2)
@@ -231,7 +234,7 @@ class QuadTree(Tree):
             else:
                 self._se.insert(name, point)
         elif directions(self._centre, point) == 1:
-            if self.is_empty() or self._ne ==[]:
+            if self.is_empty() or self._ne == []:
                 newquad = QuadTree(
                     (self._centre[0] + step, self._centre[1] - step))
                 self._ne = newquad
@@ -239,7 +242,7 @@ class QuadTree(Tree):
             else:
                 self._ne.insert(name, point)
         elif directions(self._centre, point) == 2:
-            if self.is_empty() or self._nw ==[]:
+            if self.is_empty() or self._nw == []:
                 newquad = QuadTree(
                     (self._centre[0] - step, self._centre[1] - step))
                 self._nw = newquad
