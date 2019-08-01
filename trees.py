@@ -222,13 +222,13 @@ class QuadTree(Tree):
         elif self._point == point:
             return True
         elif point[0] > self._point[0] and point[1] > self._point[1]:
-            return self._se.contains_point()
+            return self._se.contains_point(point)
         elif point[0] > self._point[0] and point[1] < self._point[1]:
-            return self._ne.contains_point()
+            return self._ne.contains_point(point)
         elif point[0] < self._point[0] and point[1] > self._point[1]:
-            return self._sw.contains_point()
+            return self._sw.contains_point(point)
         elif point[0] < self._point[0] and point[1] < self._point[1]:
-            return self._nw.contains_point()
+            return self._nw.contains_point(point)
         return False
 
     def insert(self, name: str, point: Tuple[int, int]) -> None:
@@ -538,7 +538,19 @@ class QuadTree(Tree):
             return False
         return True
 
+def countsub_v2(treee:TwoDTree)->int:
+    count = 0
+    if treee._lt != []:
+        count += 1
+    if treee._gt != []:
+        count += 1
 
+def checksub_v2(tre:TwoDTree)->int:
+    if tre._lt!=[]:
+        return 1
+    else:
+        return 2
+    
 class TwoDTree(Tree):
     _name: Optional[str]
     _point: Optional[Tuple[int, int]]
@@ -548,12 +560,180 @@ class TwoDTree(Tree):
     _gt: Optional[TwoDTree]
     _split_type: str
 
-    def __init__(self, nw: Tuple[int, int], se: Tuple[int, int]) -> None:
+    def __init__(self, name: str) -> None:
         """Initialize a new Tree instance
 
         Runtime: O(1)
         """
-        pass
+        self._name = name
+        self._point = ()
+        self._nw = ()
+        self._se = ()
+        self._lt = []
+        self._gt = []
+        self._split_type = ""
+
+    def __contains__(self, name: str) -> bool:
+        """ Return True if a player named <name> is stored in this tree.
+
+        Runtime: O(n)
+        """
+        if self.is_empty():
+            return False
+        elif name == self._name:
+            return True
+        else:
+            if self._lt.__contains__(name) or self._gt.__contains__(name):
+                return True
+            return False
+
+    def contains_point(self, point: Tuple[int, int]) -> bool:
+        """ Return True if a player at location <point> is stored in this tree.
+
+        Runtime: O(log(n))
+        """
+        if self.is_empty():
+            return False
+        elif self._point == point:
+            return True
+        elif point[0] > self._point[0] and point[1] > self._point[1]:
+            return self._gt.contains_point(point)
+        elif point[0] < self._point[0] and point[1] < self._point[1]:
+            return self._lt.contains_point(point)
+        return False
+
+    def insert(self, name: str, point: Tuple[int, int]) -> None:
+        """Insert a player named <name> into this tree at point <point>.
+
+        Raise an OutOfBoundsError if <point> is out of bounds.
+
+        Runtime: O(log(n))
+        """
+        raise NotImplementedError
+
+    def remove(self, name: str) -> None:
+        """ Remove information about a player named <name> from this tree.
+
+        Runtime: O(n)
+        """
+        raise NotImplementedError
+
+    def remove_point(self, point: Tuple[int, int]) -> None:
+        """ Remove information about a player at point <point> from this tree.
+
+        Runtime: O(log(n))
+        """
+        raise NotImplementedError
+
+    def move(self, name: str, direction: str, steps: int) -> Optional[Tuple[int, int]]:
+        """ Return the new location of the player named <name> after moving it
+        in the given <direction> by <steps> steps.
+
+        Raise an OutOfBoundsError if this would move the player named
+        <name> out of bounds (before moving the player).
+
+        Runtime: O(n)
+
+        === precondition ===
+        direction in ['N', 'S', 'E', 'W']
+        """
+        raise NotImplementedError
+
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> Optional[Tuple[int, int]]:
+        """ Return the new location of the player at point <point> after moving it
+        in the given <direction> by <steps> steps.
+
+        Raise an OutOfBoundsError if this would move the player at point
+        <point> out of bounds (before moving the player).
+
+        Moving a point may require the tree to be reorganized. This method should do
+        the minimum amount of tree reorganization possible to move the given point properly.
+
+        Runtime: O(log(n))
+
+        === precondition ===
+        direction in ['N', 'S', 'E', 'W']
+
+        """
+        raise NotImplementedError
+
+    def names_in_range(self, point: Tuple[int, int], direction: str, distance: int) -> List[str]:
+        """ Return a list of names of players whose location is in the <direction>
+        relative to <point> and whose location is within <distance> along both the x and y axis.
+
+        For example: names_in_range((100, 100), 'SE', 10) should return the names of all
+        the players south east of (100, 100) and within 10 steps in either direction.
+        In other words, find all players whose location is in the box with corners at:
+        (100, 100) (110, 100) (100, 110) (110, 110)
+
+        Runtime: faster than O(n) when distance is small
+
+        === precondition ===
+        direction in ['NE', 'SE', 'NE', 'SW']
+        """
+        raise NotImplementedError
+
+    def size(self) -> int:
+        """ Return the number of nodes in <self>
+
+        Runtime: O(n)
+        """
+        if self._name == '' and self._point == ():
+            return 0
+        elif countsub_v2(self) == 0:
+            return 1
+        else:
+            a = self._lt.size()
+            b = self._gt.size()
+            total = a + b
+            return total
+
+    def height(self) -> int:
+        """ Return the height of <self>
+
+        Runtime: O(n)
+        """
+        if self.is_empty():
+            return 0
+        elif self.is_leaf():
+            return 1
+        else:
+            a = self._lt.height()
+            b = self._gt.height()
+            return max(a, b) + 1
+
+    def depth(self, tree: Tree) -> Optional[int]:
+        """ Return the depth of the subtree <tree> relative to <self>. Return None
+        if <tree> is not a descendant of <self>
+
+        Runtime: O(log(n))
+        """
+        raise NotImplementedError
+
+    def is_leaf(self) -> bool:
+        """ Return True if <self> has no children
+
+        Runtime: O(1)
+        """
+        if self._lt.is_empty() and self._gt.is_empty():
+            return True
+        return False
+
+    def is_empty(self) -> bool:
+        """ Return True if <self> does not store any information about the location
+        of any players.
+
+        Runtime: O(1)
+        """
+        if self._lt != []:
+            return False
+        elif self._gt != []:
+            return False
+        elif self._name != "":
+            return False
+        elif self._point != ():
+            return False
+        return True
 
     def balance(self) -> None:
         """ Balance <self> so that there is at most a difference of 1 between the
