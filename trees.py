@@ -394,7 +394,24 @@ class QuadTree(Tree):
         === precondition ===
         direction in ['N', 'S', 'E', 'W']
         """
-        raise NotImplementedError
+        tempcord = (0, 0)
+        tempname = name
+        if direction == 'N':
+            tempcord = (self._point[0], self._point[1] - steps)
+        elif direction == 'S':
+            tempcord = (self._point[0], self._point[1] + steps)
+        elif direction == 'E':
+            tempcord = (self._point[0] + steps, self._point[1])
+        elif direction == 'W':
+            tempcord = (self._point[0] - steps, self._point[1])
+        if tempcord[0] > self._centre[0] * 2 or tempcord[1] > self._centre[
+            1] * 2:
+            raise OutOfBoundsError
+        if self.contains_point(tempcord):
+            raise OutOfBoundsError
+        self.remove(name)
+        self.insert(tempname, tempcord)
+        return tempcord
 
     def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> \
             Optional[Tuple[int, int]]:
