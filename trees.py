@@ -154,7 +154,8 @@ def directions(centre: Tuple[int, int], point: Tuple[int, int]) -> int:
     else:
         return 2
 
-def countsub(treee:QuadTree)->int:
+
+def countsub(treee: QuadTree) -> int:
     count = 0
     if treee._se != []:
         count += 1
@@ -165,15 +166,17 @@ def countsub(treee:QuadTree)->int:
     if treee._nw != []:
         count += 1
 
-def checksub(tre:QuadTree)->int:
-    if tre._ne!=[]:
+
+def checksub(tre: QuadTree) -> int:
+    if tre._ne != []:
         return 1
-    elif tre._nw!=[]:
+    elif tre._nw != []:
         return 2
-    elif tre._sw!=[]:
+    elif tre._sw != []:
         return 3
     else:
         return 4
+
 
 class QuadTree(Tree):
     _centre: Tuple[int, int]
@@ -196,6 +199,41 @@ class QuadTree(Tree):
         self._sw = []
         self._name = ""
         self._point = ()
+
+    def getpoint(self, name: str) -> Tuple[int, int]:
+        if self.is_empty():
+            return None
+        elif self._name == name:
+            return self._point
+        else:
+            a = self._ne.getpoint(name)
+            b = self._se.getpoint(name)
+            c = self._nw.getpoint(name)
+            d = self._sw.getpoint(name)
+            if a is not None:
+                return a
+            elif b is not None:
+                return b
+            elif c is not None:
+                return c
+            elif d is not None:
+                return d
+            return None
+
+    def getname(self, point: Tuple[int, int]) -> str:
+        if self.is_empty():
+            return None
+        elif self._point == point:
+            return self._name
+        elif point[0] > self._point[0] and point[1] > self._point[1]:
+            return self._se.getname(point)
+        elif point[0] > self._point[0] and point[1] < self._point[1]:
+            return self._ne.getname(point)
+        elif point[0] < self._point[0] and point[1] > self._point[1]:
+            return self._sw.getname(point)
+        elif point[0] < self._point[0] and point[1] < self._point[1]:
+            return self._nw.getname(point)
+        return None
 
     def __contains__(self, name: str) -> bool:
         """ Return True if a player named <name> is stored in this tree.
@@ -284,57 +322,9 @@ class QuadTree(Tree):
 
         Runtime: O(n)
         """
-        if self._name=='' and countsub(self)==0:
+        if self._name == '' and countsub(self) == 0:
             pass
-        elif self._name==name:
-            count=countsub(self)
-            if count>=2:
-                self._name=''
-                self._point=()
-            elif count==1:
-                if self._ne!=[]:
-                    if countsub(self._ne)==0:
-                        self._name=self._ne._name
-                        self._point=self._ne._point
-                    else:
-                        self._name = ''
-                        self._point = ()
-                if self._se!=[]:
-                    if countsub(self._se)==0:
-                        self._name=self._se._name
-                        self._point=self._se._point
-                    else:
-                        self._name = ''
-                        self._point = ()
-                if self._nw!=[]:
-                    if countsub(self._nw)==0:
-                        self._name=self._nw._name
-                        self._point=self._nw._point
-                    else:
-                        self._name = ''
-                        self._point = ()
-                if self._sw!=[]:
-                    if countsub(self._sw)==0:
-                        self._name=self._sw._name
-                        self._point=self._sw._point
-                    else:
-                        self._name = ''
-                        self._point = ()
-        else:
-            self._se.remove(name)
-            self._sw.remove(name)
-            self._ne.remove(name)
-            self._nw.remove(name)
-
-    def remove_point(self, point: Tuple[int, int]) -> None:
-        """ Remove information about a player at point <point> from this tree.
-
-        Runtime: O(log(n))
-        """
-        direction=directions(self._centre, point)
-        if self._point==() and countsub(self)==0:
-            pass
-        elif self._point==point:
+        elif self._name == name:
             count = countsub(self)
             if count >= 2:
                 self._name = ''
@@ -369,11 +359,59 @@ class QuadTree(Tree):
                         self._name = ''
                         self._point = ()
         else:
-            if direction==4:
+            self._se.remove(name)
+            self._sw.remove(name)
+            self._ne.remove(name)
+            self._nw.remove(name)
+
+    def remove_point(self, point: Tuple[int, int]) -> None:
+        """ Remove information about a player at point <point> from this tree.
+
+        Runtime: O(log(n))
+        """
+        direction = directions(self._centre, point)
+        if self._point == () and countsub(self) == 0:
+            pass
+        elif self._point == point:
+            count = countsub(self)
+            if count >= 2:
+                self._name = ''
+                self._point = ()
+            elif count == 1:
+                if self._ne != []:
+                    if countsub(self._ne) == 0:
+                        self._name = self._ne._name
+                        self._point = self._ne._point
+                    else:
+                        self._name = ''
+                        self._point = ()
+                if self._se != []:
+                    if countsub(self._se) == 0:
+                        self._name = self._se._name
+                        self._point = self._se._point
+                    else:
+                        self._name = ''
+                        self._point = ()
+                if self._nw != []:
+                    if countsub(self._nw) == 0:
+                        self._name = self._nw._name
+                        self._point = self._nw._point
+                    else:
+                        self._name = ''
+                        self._point = ()
+                if self._sw != []:
+                    if countsub(self._sw) == 0:
+                        self._name = self._sw._name
+                        self._point = self._sw._point
+                    else:
+                        self._name = ''
+                        self._point = ()
+        else:
+            if direction == 4:
                 self._se.remove_point(point)
-            elif direction==3:
+            elif direction == 3:
                 self._sw.remove_point(point)
-            elif direction==1:
+            elif direction == 1:
                 self._ne.remove_point(point)
             else:
                 self._nw.remove_point(point)
@@ -396,14 +434,15 @@ class QuadTree(Tree):
         """
         tempcord = (0, 0)
         tempname = name
+        point = self.getpoint(name)
         if direction == 'N':
-            tempcord = (self._point[0], self._point[1] - steps)
+            tempcord = (point[0], point[1] - steps)
         elif direction == 'S':
-            tempcord = (self._point[0], self._point[1] + steps)
+            tempcord = (point[0], point[1] + steps)
         elif direction == 'E':
-            tempcord = (self._point[0] + steps, self._point[1])
+            tempcord = (point[0] + steps, point[1])
         elif direction == 'W':
-            tempcord = (self._point[0] - steps, self._point[1])
+            tempcord = (point[0] - steps, point[1])
         if tempcord[0] > self._centre[0] * 2 or tempcord[1] > self._centre[
             1] * 2:
             raise OutOfBoundsError
@@ -433,7 +472,24 @@ class QuadTree(Tree):
         direction in ['N', 'S', 'E', 'W']
 
         """
-        raise NotImplementedError
+        tempcord = (0, 0)
+        tempname = self.getname(point)
+        if direction == 'N':
+            tempcord = (point[0], point[1] - steps)
+        elif direction == 'S':
+            tempcord = (point[0], point[1] + steps)
+        elif direction == 'E':
+            tempcord = (point[0] + steps, point[1])
+        elif direction == 'W':
+            tempcord = (point[0] - steps, point[1])
+        if tempcord[0] > self._centre[0] * 2 or tempcord[1] > self._centre[
+            1] * 2:
+            raise OutOfBoundsError
+        if self.contains_point(tempcord):
+            raise OutOfBoundsError
+        self.remove(tempname)
+        self.insert(tempname, tempcord)
+        return tempcord
 
     def names_in_range(self, point: Tuple[int, int], direction: str,
                        distance: int) -> List[str]:
@@ -450,23 +506,52 @@ class QuadTree(Tree):
         === precondition ===
         direction in ['NE', 'SE', 'NE', 'SW']
         """
-        raise NotImplementedError
+        lst = []
+        endpoint = ()
+        if direction == 'NE':
+            endpoint = (point[0] + distance, point[1] - distance)
+        elif direction == 'SE':
+            endpoint = (point[0] + distance, point[1] + distance)
+        elif direction == 'SW':
+            endpoint = (point[0] - distance, point[1] + distance)
+        elif direction == 'NW':
+            endpoint = (point[0] - distance, point[1] - distance)
+
+        upr = (max(point[0], endpoint[0]), min(point[1], endpoint[1]))
+        upl = (min(point[0], endpoint[0]), min(point[1], endpoint[1]))
+        downr = (max(point[0], endpoint[0]), max(point[1], endpoint[1]))
+        downl = (min(point[0], endpoint[0]), max(point[1], endpoint[1]))
+        if downl[0] < self._centre[0] < downr[0] and upl[1]<self._centre[1]<downl[1]:
+            lst.append(self._name)
+        if self._se !=[] or countsub(self._se)>0:
+            a=self._se.names_in_range(point, direction, distance)
+            lst=lst+a
+        if self._sw !=[] or countsub(self._sw)>0:
+            a=self._sw.names_in_range(point, direction, distance)
+            lst=lst+a
+        if self._ne !=[] or countsub(self._ne)>0:
+            a=self._ne.names_in_range(point, direction, distance)
+            lst=lst+a
+        if self._nw !=[] or countsub(self._nw)>0:
+            a=self._nw.names_in_range(point, direction, distance)
+            lst=lst+a
+        return lst
 
     def size(self) -> int:
         """ Return the number of nodes in <self>
 
         Runtime: O(n)
         """
-        if self._name=='' and self._point==():
+        if self._name == '' and self._point == ():
             return 0
-        elif countsub(self)==0:
+        elif countsub(self) == 0:
             return 1
         else:
-            a=self._ne.size()
+            a = self._ne.size()
             b = self._nw.size()
             c = self._se.size()
             d = self._sw.size()
-            total=a+b+c+d
+            total = a + b + c + d
             return total
 
     def height(self) -> int:
@@ -482,11 +567,11 @@ class QuadTree(Tree):
         elif self.is_leaf():
             return 1
         else:
-            a=self._ne.height()
+            a = self._ne.height()
             b = self._nw.height()
             c = self._se.height()
             d = self._sw.height()
-            return max(a,b,c,d)+1
+            return max(a, b, c, d) + 1
 
     def depth(self, tree: Tree) -> Optional[int]:
         """ Return the depth of the subtree <tree> relative to <self>. Return None
@@ -494,22 +579,22 @@ class QuadTree(Tree):
 
         Runtime: O(log(n))
         """
-        directions=(self._centre,tree._point)
-        if self._point==tree._point:
+        directions = (self._centre, tree._point)
+        if self._point == tree._point:
             return 1
-        elif directions==1:
-            a=self._ne.depth(tree)
+        elif directions == 1:
+            a = self._ne.depth(tree)
             if a is not None:
-                return a+1
+                return a + 1
             else:
                 return None
-        elif directions==2:
+        elif directions == 2:
             a = self._nw.depth(tree)
             if a is not None:
                 return a + 1
             else:
                 return None
-        elif directions==3:
+        elif directions == 3:
             a = self._sw.depth(tree)
             if a is not None:
                 return a + 1
@@ -521,8 +606,6 @@ class QuadTree(Tree):
                 return a + 1
             else:
                 return None
-
-
 
     def is_leaf(self) -> bool:
         """ Return True if <self> has no children
@@ -555,19 +638,22 @@ class QuadTree(Tree):
             return False
         return True
 
-def countsub_v2(treee:TwoDTree)->int:
+
+def countsub_v2(treee: TwoDTree) -> int:
     count = 0
     if treee._lt != []:
         count += 1
     if treee._gt != []:
         count += 1
 
-def checksub_v2(tre:TwoDTree)->int:
-    if tre._lt!=[]:
+
+def checksub_v2(tre: TwoDTree) -> int:
+    if tre._lt != []:
         return 1
     else:
         return 2
-    
+
+
 class TwoDTree(Tree):
     _name: Optional[str]
     _point: Optional[Tuple[int, int]]
@@ -642,7 +728,8 @@ class TwoDTree(Tree):
         """
         raise NotImplementedError
 
-    def move(self, name: str, direction: str, steps: int) -> Optional[Tuple[int, int]]:
+    def move(self, name: str, direction: str, steps: int) -> Optional[
+        Tuple[int, int]]:
         """ Return the new location of the player named <name> after moving it
         in the given <direction> by <steps> steps.
 
@@ -656,7 +743,8 @@ class TwoDTree(Tree):
         """
         raise NotImplementedError
 
-    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> Optional[Tuple[int, int]]:
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> \
+            Optional[Tuple[int, int]]:
         """ Return the new location of the player at point <point> after moving it
         in the given <direction> by <steps> steps.
 
@@ -674,7 +762,8 @@ class TwoDTree(Tree):
         """
         raise NotImplementedError
 
-    def names_in_range(self, point: Tuple[int, int], direction: str, distance: int) -> List[str]:
+    def names_in_range(self, point: Tuple[int, int], direction: str,
+                       distance: int) -> List[str]:
         """ Return a list of names of players whose location is in the <direction>
         relative to <point> and whose location is within <distance> along both the x and y axis.
 
