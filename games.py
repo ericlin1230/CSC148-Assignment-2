@@ -20,13 +20,45 @@ class Tag(Game):
     field: Union[QuadTree, TwoDTree]
     _it: str
     _duration: int
-    
-    def __init__(self, n_players: int, 
+
+    def __init__(self, n_players: int,
                        field_type: Union[QuadTree, TwoDTree],
                        duration: int,
                        max_speed: int,
                        max_vision: int) -> None:
-        pass
+        self.n_players = n_players
+        self.field = field_type
+        self._duration = duration
+        self.max_speed = max_speed
+        self.max_vision = max_vision
+        self._players = {}
+        self._it = ""
+
+    def handle_collision(self, player1: str, player2: str) -> None:
+        """ Perform some action when <player1> and <player2> collide """
+        if self.field
+
+    def check_for_winner(self) -> Optional[str]:
+        """ Return the name of the player or group of players that have
+        won the game, or None if no player has won yet """
+        if len(self._players) > 2:
+            for player in self._players:
+                if self._players[player]._points >= 1 and self._it != player:
+                    del self._players[player]
+                    self.field.remove(player)
+            winners = [*self._players]
+            return winners
+
+        elif len(self._players) == 2:
+            for player in self._players:
+                if self._it == player:
+                    del self._players[player]
+                    self.field.remove(player)
+            winner = [*self._players]
+            return winner[0]
+        else:
+            winner = [*self._players]
+            return winner[0]
 
 class ZombieTag(Game):
     _humans: Dict[str, Player]
@@ -34,22 +66,63 @@ class ZombieTag(Game):
     field: Union[QuadTree, TwoDTree]
     _duration: int
 
-    def __init__(self, n_players: int, 
+    def __init__(self, n_players: int,
                        field_type: Union[QuadTree, TwoDTree],
                        duration: int,
                        max_speed: int,
                        max_vision: int) -> None:
-        pass
+        self.n_players = n_players
+        self.field = field_type
+        self._duration = duration
+        self.max_speed = max_speed
+        self.max_vision = max_vision
+        self._humans = {}
+        self._zombies = {}
+        for human in self._humans:
+            self._humans[human]._vision = random.randint(0, max_vision)
+            self._humans[human]._speed = random.randint(0, max_speed)
+        for zombie in self._zombies:
+            self._zombies[zombie]._vision = self.max_vision
+            self._zombies[zombie]._speed = 1
+
+    def handle_collision(self, player1: str, player2: str) -> None:
+        """ Perform some action when <player1> and <player2> collide """
+        raise NotImplementedError
+
+    def check_for_winner(self) -> Optional[str]:
+        """ Return the name of the player or group of players that have
+        won the game, or None if no player has won yet """
+        if self._humans == {}:
+            return [*self._zombies]
+        elif len(self._humans) >= 2:
+            return [*self._humans]
+        else:
+            winner = [*self._humans]
+            return winner[0]
+
 
 class EliminationTag(Game):
     _players: Dict[str, Player]
-    field: Union[QuadTree, TwoDTree]   
+    field: Union[QuadTree, TwoDTree]
 
-    def __init__(self, n_players: int, 
+    def __init__(self, n_players: int,
                        field_type: Union[QuadTree, TwoDTree],
                        max_speed: int,
                        max_vision: int) -> None:
-        pass
+        self.n_players = n_players
+        self.field = field_type
+        self.max_speed = max_speed
+        self.max_vision = max_vision
+        self._players = {}
+
+    def handle_collision(self, player1: str, player2: str) -> None:
+        """ Perform some action when <player1> and <player2> collide """
+        raise NotImplementedError
+
+    def check_for_winner(self) -> Optional[str]:
+        """ Return the name of the player or group of players that have
+        won the game, or None if no player has won yet """
+        raise NotImplementedError
 
 if __name__ == '__main__':
     import python_ta
