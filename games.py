@@ -11,7 +11,7 @@ class Game:
         raise NotImplementedError
 
     def check_for_winner(self) -> Optional[str]:
-        """ Return the name of the player or group of players that have 
+        """ Return the name of the player or group of players that have
         won the game, or None if no player has won yet """
         raise NotImplementedError
 
@@ -36,29 +36,54 @@ class Tag(Game):
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
-        if self.field
+        pass
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
-        won the game, or None if no player has won yet """
+        won the game, or None if no player has won yet
+        # >>> len(t._players) == 1
+        # True
+        # >>> c = Player(None, None, None, None, None, None)
+        # >>> t2 = Tag(3, None, 60, 1, 10)
+        # >>> t2._players["player"] = p
+        # >>> t2._players["eric"] = e
+        # >>> t2._players["c"] = c
+        # >>> len(t2._players) == 3
+        # True
+        # >>> t._it = "player"
+        # >>> t.check_for_winner()
+        # 'eric'
+        # >>> len(t2._players) == 1
+        # True
+        >>> p = Player(None, None, None, None, None, None)
+        >>> e = Player(None, None, None, None, None, None)
+        >>> t = Tag(2, None, 60, 1, 10)
+        >>> t._players["player"] = p
+        >>> t._players["eric"] = e
+        >>> len(t._players) == 2
+        True
+        >>> t._it = "player"
+        >>> t.check_for_winner()
+        'eric'
+        """
         if len(self._players) > 2:
             for player in self._players:
                 if self._players[player]._points >= 1 and self._it != player:
                     del self._players[player]
-                    self.field.remove(player)
+                    # self.field.remove(player)
             winners = [*self._players]
             return winners
 
         elif len(self._players) == 2:
-            for player in self._players:
-                if self._it == player:
-                    del self._players[player]
-                    self.field.remove(player)
+            if self._it in self._players:
+                del self._players[self._it]
+                # self.field.remove(player)
             winner = [*self._players]
             return winner[0]
         else:
             winner = [*self._players]
             return winner[0]
+
 
 class ZombieTag(Game):
     _humans: Dict[str, Player]
@@ -91,7 +116,23 @@ class ZombieTag(Game):
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
-        won the game, or None if no player has won yet """
+        won the game, or None if no player has won yet
+        >>> p = Player(None, None, None, None, None, None)
+        >>> e = Player(None, None, None, None, None, None)
+        >>> c = Player(None, None, None, None, None, None)
+        >>> z = ZombieTag(3, None, 60, 1, 10)
+        >>> z._zombies['p'] = p
+        >>> z._zombies['e'] = e
+        >>> z._zombies['c'] = c
+        >>> z.check_for_winner()
+        ['p', 'e', 'c']
+        >>> z2 = ZombieTag(3, None, 60, 1, 10)
+        >>> z2._humans['p'] = p
+        >>> z2._humans['e'] = e
+        >>> z2._zombies['c'] = c
+        >>> z2.check_for_winner()
+        ['p', 'e']
+        """
         if self._humans == {}:
             return [*self._zombies]
         elif len(self._humans) >= 2:
@@ -121,8 +162,30 @@ class EliminationTag(Game):
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
-        won the game, or None if no player has won yet """
-        raise NotImplementedError
+        won the game, or None if no player has won yet
+        >>> p = Player(None, None, None, None, None, None)
+        >>> e = Player(None, None, None, None, None, None)
+        >>> c = Player(None, None, None, None, None, None)
+        >>> elim = EliminationTag(3, None, 1, 10)
+        >>> elim._players['p'] = p
+        >>> elim._players['e'] = e
+        >>> elim._players['c'] = c
+        >>> elim._players['p']._points = 3
+        >>> elim._players['e']._points = 2
+        >>> elim._players['c']._points = 1
+        >>> elim.check_for_winner()
+        'p'
+        """
+        winner = []
+        points = 0
+        for player in self._players:
+            if self._players[player]._points >= points:
+                winner.append(player)
+                points = self._players[player]._points
+        if len(winner) > 1:
+            return None
+        else:
+            return winner[0]
 
 if __name__ == '__main__':
     import python_ta
