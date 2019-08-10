@@ -105,28 +105,34 @@ class Player:
         self should continue to move in this new direction until next_direction is called again.
         """
         if self._direction == "N" and self._location[1] - self._speed < 0:
-            self._direction = "S"
-            self._location += self._speed
+            self.reverse_direction()
+            self._location[1] = self._game.field.move_point((self._location, "S", self._speed))
         elif self._direction == "N" and self._location[1] - self._speed >= 0:
-            self._location[1] -= self._speed
+            self._location[1] = self._game.field.move_point((self._location, "N", self._speed))
 
-        if self._direction == "S" and self._location[1] + self._speed >:
-            self._direction = "N"
-            self._location += self._speed
-        elif self._direction == "S" and self._location[1] + self._speed <=:
-            self._location[1] += self._speed
+        if self._direction == "S" and self._location[1] + self._speed > (2*(self._game.field._centre[1])):
+            self.reverse_direction()
+            self._location = self._game.field.move_point((self._location, "N", self._speed))
+        elif self._direction == "S" and self._location[1] + self._speed <= (2*(self._game.field._centre[1])):
+            self._location[1] = self._game.field.move_point((self._location, "S", self._speed))
 
         if self._direction == "W" and self._location[0] - self._speed < 0:
-            self._direction = "E"
-            self._location += self._speed
+            self.reverse_direction()
+            self._location[0] = self._game.field.move_point(
+                (self._location, "E", self._speed))
         elif self._direction == "W" and self._location[0] - self._speed >= 0:
-            self._location[0] -= self._speed
+            self._location[0] = self._game.field.move_point(
+                (self._location, "W", self._speed))
 
-        if self._direction == "E" and self._location[0] + self._speed >:
-            self._direction = "W"
-            self._location -= self._speed
-        else:
-            self._location += self._speed
+        if self._direction == "E" and self._location[0] + self._speed > (
+                2 * (self._game.field._centre[0])):
+            self.reverse_direction()
+            self._location = self._game.field.move_point(
+                (self._location, "W", self._speed))
+        elif self._direction == "E" and self._location[0] + self._speed <= (
+                2 * (self._game.field._centre[0])):
+            self._location[0] = self._game.field.move_point(
+                (self._location, "E", self._speed))
 
 if __name__ == '__main__':
     import python_ta
