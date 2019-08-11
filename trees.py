@@ -69,7 +69,7 @@ class Tree:
         """
         raise NotImplementedError
 
-    def move_point(self, point: Tuple[int, int], direction: str, steps: int)\
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int) \
             -> Optional[Tuple[int, int]]:
         """ Return the new location of the player at point <point> after
         moving it
@@ -1164,7 +1164,7 @@ class TwoDTree(Tree):
                 return self._lt.getpoint(name)
         return None
 
-    def move(self, name: str, direction: str, steps: int)\
+    def move(self, name: str, direction: str, steps: int) \
             -> Optional[Tuple[int, int]]:
         """ Return the new location of the player named <name> after moving it
         in the given <direction> by <steps> steps.
@@ -1189,7 +1189,7 @@ class TwoDTree(Tree):
             tempcord = (point[0] + steps, point[1])
         elif direction == 'W':
             tempcord = (point[0] - steps, point[1])
-        if tempcord[0] > self._se[0] or tempcord[1] > self._se[1]\
+        if tempcord[0] > self._se[0] or tempcord[1] > self._se[1] \
                 or tempcord[0] < self._nw[0] or tempcord[1] < self._nw[1]:
             raise OutOfBoundsError
         if self.contains_point(tempcord):
@@ -1385,13 +1385,35 @@ class TwoDTree(Tree):
             return False
         return True
 
+    def takeoff(self) -> List:
+        a = []
+        if self._point is not None and self._name is not None:
+            ab = [self._name, self._point]
+            a.append(ab)
+        if self._lt is not None:
+            ab = self._lt.takeoff()
+            a.append(ab)
+        if self._gt is not None:
+            ab = self._gt.takeoff()
+            a.append(ab)
+        return a
+
     def balance(self) -> None:
         """ Balance <self> so that there is at most a difference of 1 between
         the
         size of the _lt subtree and the size of the _gt subtree for all trees in
         <self>.
+        >>> q=TwoDTree((0, 0), (500, 500))
+        >>> q1=TwoDTree((0, 0), (500, 500))
+        >>> q1.insert('d', (250,250))
+        >>> q.balance()
         """
-        pass
+        alist = self.takeoff()
+        newquad = TwoDTree(self._nw, self._se)
+        for item in alist:
+            newquad.insert(item[0], item[1])
+        self._lt = newquad._lt
+        self._gt = newquad._gt
 
 
 if __name__ == '__main__':
