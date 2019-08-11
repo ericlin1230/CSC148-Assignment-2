@@ -1277,16 +1277,20 @@ class TwoDTree(Tree):
         >>> t.height()
         1
         """
-        if self.is_empty():
+        if self._lt is None and self._gt is None and self._point is None:
+            return 1
+        elif self.is_empty():
             return 0
-        elif self._lt.is_empty() and self._gt.is_empty():
+        elif self.is_leaf():
             return 1
         else:
+            a=0
+            b=0
             if self._lt is not None:
                 a = self._lt.height()
             if self._gt is not None:
                 b = self._gt.height()
-            total = a + b
+            total = max(a,b)
             return total + 1
 
     def depth(self, tree: Tree) -> Optional[int]:
