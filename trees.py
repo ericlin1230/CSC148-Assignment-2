@@ -26,8 +26,10 @@ class Tree:
 
         Raise an OutOfBoundsError if <point> is out of bounds.
 
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the player
+        at exactly the
+        same coordinates of another player in the Tree (before moving the pla
+        yer).
 
         Runtime: O(log(n))
         """
@@ -47,16 +49,18 @@ class Tree:
         """
         raise NotImplementedError
 
-    def move(self, name: str, direction: str, steps: int) -> Optional[
-        Tuple[int, int]]:
+    def move(self, name: str, direction: str, steps: int) \
+            -> Optional[Tuple[int, int]]:
         """ Return the new location of the player named <name> after moving it
         in the given <direction> by <steps> steps.
 
         Raise an OutOfBoundsError if this would move the player named
         <name> out of bounds (before moving the player).
 
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the player
+        at exactly the
+        same coordinates of another player in the Tree (before moving the
+        player).
 
         Runtime: O(n)
 
@@ -65,19 +69,24 @@ class Tree:
         """
         raise NotImplementedError
 
-    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> \
-            Optional[Tuple[int, int]]:
-        """ Return the new location of the player at point <point> after moving it
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int)\
+            -> Optional[Tuple[int, int]]:
+        """ Return the new location of the player at point <point> after
+        moving it
         in the given <direction> by <steps> steps.
 
         Raise an OutOfBoundsError if this would move the player at point
         <point> out of bounds (before moving the player).
 
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the playe
+        r at exactly the
+        same coordinates of another player in the Tree (before moving the
+        player).
 
-        Moving a point may require the tree to be reorganized. This method should do
-        the minimum amount of tree reorganization possible to move the given point properly.
+        Moving a point may require the tree to be reorganized. This method s
+        hould do
+        the minimum amount of tree reorganization possible to move the given p
+        oint properly.
 
         Runtime: O(log(n))
 
@@ -89,12 +98,17 @@ class Tree:
 
     def names_in_range(self, point: Tuple[int, int], direction: str,
                        distance: int) -> List[str]:
-        """ Return a list of names of players whose location is in the <direction>
-        relative to <point> and whose location is within <distance> along both the x and y axis.
+        """ Return a list of names of players whose location is in the <dir
+        ection>
+        relative to <point> and whose location is within <distance> along
+        both the x and y axis.
 
-        For example: names_in_range((100, 100), 'SE', 10) should return the names of all
-        the players south east of (100, 100) and within 10 steps in either direction.
-        In other words, find all players whose location is in the box with corners at:
+        For example: names_in_range((100, 100), 'SE', 10) should return t
+        he names of all
+        the players south east of (100, 100) and within 10 steps in either
+         direction.
+        In other words, find all players whose location is in the box with
+        corners at:
         (100, 100) (110, 100) (100, 110) (110, 110)
 
         Runtime: faster than O(n) when distance is small
@@ -114,7 +128,8 @@ class Tree:
     def height(self) -> int:
         """ Return the height of <self>
 
-        Height is measured as the number of nodes in the path from the root of this
+        Height is measured as the number of nodes in the path from the ro
+        ot of this
         tree to the node at the greatest depth in this tree.
 
         Runtime: O(n)
@@ -122,7 +137,8 @@ class Tree:
         raise NotImplementedError
 
     def depth(self, tree: Tree) -> Optional[int]:
-        """ Return the depth of the subtree <tree> relative to <self>. Return None
+        """ Return the depth of the subtree <tree> relative to <self>. Re
+        turn None
         if <tree> is not a descendant of <self>
 
         Runtime: O(log(n))
@@ -136,7 +152,8 @@ class Tree:
         raise NotImplementedError
 
     def is_empty(self) -> bool:
-        """ Return True if <self> does not store any information about the location
+        """ Return True if <self> does not store any information ab
+        out the location
         of any players.
 
         Runtime: O(1)
@@ -306,8 +323,10 @@ class QuadTree(Tree):
     def insert(self, name: str, point: Tuple[int, int]) -> None:
         """Insert a player named <name> into this tree at point <point>.
         Raise an OutOfBoundsError if <point> is out of bounds.
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the p
+        layer at exactly the
+        same coordinates of another player in the Tree (before moving th
+        e player).
         Runtime: O(log(n))
         >>> q = QuadTree((100, 100))
         >>> q.insert("Eric", (150, 150))
@@ -393,7 +412,7 @@ class QuadTree(Tree):
                 self._se = newquad
                 newquad._name = name
                 newquad._point = point
-                a=self._se
+                a = self._se
             elif directions(self._centre, self._point) == 1:
                 newquad = QuadTree(
                     (self._centre[0] + step, self._centre[1] - step))
@@ -574,14 +593,16 @@ class QuadTree(Tree):
             elif direction == 2 and self._nw is not None:
                 self._nw.remove_point(point)
 
-    def move(self, name: str, direction: str, steps: int) -> Optional[
-        Tuple[int, int]]:
+    def move(self, name: str, direction: str, steps: int) \
+            -> Optional[Tuple[int, int]]:
         """ Return the new location of the player named <name> after moving it
         in the given <direction> by <steps> steps.
         Raise an OutOfBoundsError if this would move the player named
         <name> out of bounds (before moving the player).
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the playe
+        r at exactly the
+        same coordinates of another player in the Tree (before moving the p
+        layer).
         Runtime: O(n)
         === precondition ===
         direction in ['N', 'S', 'E', 'W']
@@ -601,8 +622,8 @@ class QuadTree(Tree):
             tempcord = (point[0] + steps, point[1])
         elif direction == 'W':
             tempcord = (point[0] - steps, point[1])
-        if tempcord[0] > self._centre[0] * 2 or tempcord[1] > self._centre[
-            1] * 2:
+        if tempcord[0] > self._centre[0] * 2 or tempcord[1] \
+                > self._centre[1] * 2:
             raise OutOfBoundsError
         if self.contains_point(tempcord):
             raise OutOfBoundsError
@@ -610,16 +631,21 @@ class QuadTree(Tree):
         self.insert(tempname, tempcord)
         return tempcord
 
-    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> \
-            Optional[Tuple[int, int]]:
-        """ Return the new location of the player at point <point> after moving it
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int) \
+            -> Optional[Tuple[int, int]]:
+        """ Return the new location of the player at point <point> after
+         moving it
         in the given <direction> by <steps> steps.
         Raise an OutOfBoundsError if this would move the player at point
         <point> out of bounds (before moving the player).
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
-        Moving a point may require the tree to be reorganized. This method should do
-        the minimum amount of tree reorganization possible to move the given point properly.
+        Raise an OutOfBoundsError if moving the player would place the player at
+         exactly the
+        same coordinates of another player in the Tree (before moving the pla
+        yer).
+        Moving a point may require the tree to be reorganized. This method
+        should do
+        the minimum amount of tree reorganization possible to move the given
+        point properly.
         Runtime: O(log(n))
         === precondition ===
         direction in ['N', 'S', 'E', 'W']
@@ -638,8 +664,8 @@ class QuadTree(Tree):
             tempcord = (point[0] + steps, point[1])
         elif direction == 'W':
             tempcord = (point[0] - steps, point[1])
-        if tempcord[0] > self._centre[0] * 2 or tempcord[1] > self._centre[
-            1] * 2:
+        if tempcord[0] > self._centre[0] * 2 or tempcord[1] \
+                > self._centre[1] * 2:
             raise OutOfBoundsError
         if self.contains_point(tempcord):
             raise OutOfBoundsError
@@ -649,11 +675,16 @@ class QuadTree(Tree):
 
     def names_in_range(self, point: Tuple[int, int], direction: str,
                        distance: int) -> List[str]:
-        """ Return a list of names of players whose location is in the <direction>
-        relative to <point> and whose location is within <distance> along both the x and y axis.
-        For example: names_in_range((100, 100), 'SE', 10) should return the names of all
-        the players south east of (100, 100) and within 10 steps in either direction.
-        In other words, find all players whose location is in the box with corners at:
+        """ Return a list of names of players whose location is in the
+        <direction>
+        relative to <point> and whose location is within <distance> along both
+        the x and y axis.
+        For example: names_in_range((100, 100), 'SE', 10) should return the
+        names of all
+        the players south east of (100, 100) and within 10 steps in either
+        direction.
+        In other words, find all players whose location is in the box with
+        corners at:
         (100, 100) (110, 100) (100, 110) (110, 110)
         Runtime: faster than O(n) when distance is small
         === precondition ===
@@ -680,9 +711,8 @@ class QuadTree(Tree):
         downr = (max(point[0], endpoint[0]), max(point[1], endpoint[1]))
         downl = (min(point[0], endpoint[0]), max(point[1], endpoint[1]))
         if self._point is not None:
-            if downl[0] <= self._point[0] <= downr[0] and upl[1] <= self._point[
-                1] <= \
-                    downl[1]:
+            if downl[0] <= self._point[0] <= \
+                    downr[0] and upl[1] <= self._point[1] <= downl[1]:
                 lst.append(self._name)
         if self._se is not None:
             a = self._se.names_in_range(point, direction, distance)
@@ -708,7 +738,7 @@ class QuadTree(Tree):
         """
         if self._name is None and self._point is None:
             return 0
-        elif countsub(self) == 0:
+        elif self.countsub() == 0:
             return 1
         else:
             a = self._ne.size()
@@ -720,7 +750,8 @@ class QuadTree(Tree):
 
     def height(self) -> int:
         """ Return the height of <self>
-        Height is measured as the number of nodes in the path from the root of this
+        Height is measured as the number of nodes in the path from the root
+        of this
         tree to the node at the greatest depth in this tree.
         Runtime: O(n)
         >>> q = QuadTree((100, 100))
@@ -750,7 +781,7 @@ class QuadTree(Tree):
                 d = self._sw.height()
             return max(a, b, c, d) + 1
 
-    def same(self, tree) -> bool:
+    def same(self, tree: TwoDTree) -> bool:
         if self._point != tree._point:
             return False
         if self._centre != tree._centre:
@@ -786,13 +817,14 @@ class QuadTree(Tree):
         if self._ne is not None and tree._ne is not None:
             return self._ne.same(tree)
         if self._sw is not None and tree._sw is not None:
-            return self._sew.same(tree)
+            return self._se.same(tree)
         if self._nw is not None and tree._nw is not None:
             return self._nw.same(tree)
         return True
 
     def depth(self, tree: Tree) -> Optional[int]:
-        """ Return the depth of the subtree <tree> relative to <self>. Return None
+        """ Return the depth of the subtree <tree> relative to <self>. Return
+        None
         if <tree> is not a descendant of <self>
         Runtime: O(log(n))
         >>> q = QuadTree((100, 100))
@@ -851,7 +883,8 @@ class QuadTree(Tree):
             return False
 
     def is_empty(self) -> bool:
-        """ Return True if <self> does not store any information about the location
+        """ Return True if <self> does not store any information about the
+        location
         of any players.
         Runtime: O(1)
         >>> q = QuadTree((100, 100))
@@ -915,7 +948,7 @@ class TwoDTree(Tree):
             return True
         else:
             if self._lt is not None:
-                if self._lt.__contains__(name) :
+                if self._lt.__contains__(name):
                     return True
             if self._gt is not None:
                 if self._gt.__contains__(name):
@@ -955,8 +988,10 @@ class TwoDTree(Tree):
     def insert(self, name: str, point: Tuple[int, int]) -> None:
         """Insert a player named <name> into this tree at point <point>.
         Raise an OutOfBoundsError if <point> is out of bounds.
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the player
+        at exactly the
+        same coordinates of another player in the Tree (before moving the
+        player).
         Runtime: O(log(n))
         >>> t = TwoDTree((0, 0), (100, 100))
         >>> t.insert("Eric", (50, 50))
@@ -982,10 +1017,10 @@ class TwoDTree(Tree):
                 if self._lt is not None:
                     self._lt.insert(name, point)
                 else:
-                    newquad=TwoDTree(self._nw, self._se)
+                    newquad = TwoDTree(self._nw, self._se)
                     newquad._point = point
                     newquad._name = name
-                    self._lt=newquad
+                    self._lt = newquad
             else:
                 if self._gt is not None:
                     self._gt.insert(name, point)
@@ -1129,14 +1164,16 @@ class TwoDTree(Tree):
                 return self._lt.getpoint(name)
         return None
 
-    def move(self, name: str, direction: str, steps: int) -> Optional[
-        Tuple[int, int]]:
+    def move(self, name: str, direction: str, steps: int)\
+            -> Optional[Tuple[int, int]]:
         """ Return the new location of the player named <name> after moving it
         in the given <direction> by <steps> steps.
         Raise an OutOfBoundsError if this would move the player named
         <name> out of bounds (before moving the player).
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
+        Raise an OutOfBoundsError if moving the player would place the player
+        at exactly the
+        same coordinates of another player in the Tree (before moving the
+        player).
         Runtime: O(n)
         === precondition ===
         direction in ['N', 'S', 'E', 'W']
@@ -1152,8 +1189,8 @@ class TwoDTree(Tree):
             tempcord = (point[0] + steps, point[1])
         elif direction == 'W':
             tempcord = (point[0] - steps, point[1])
-        if tempcord[0] > self._se[0] or tempcord[1] > self._se[1] or tempcord[0] < \
-                self._nw[0] or tempcord[1] < self._nw[1]:
+        if tempcord[0] > self._se[0] or tempcord[1] > self._se[1]\
+                or tempcord[0] < self._nw[0] or tempcord[1] < self._nw[1]:
             raise OutOfBoundsError
         if self.contains_point(tempcord):
             raise OutOfBoundsError
@@ -1161,7 +1198,7 @@ class TwoDTree(Tree):
         self.insert(tempname, tempcord)
         return tempcord
 
-    def getname(self, point) -> str:
+    def getname(self, point: Tuple[int, int]) -> str:
         if self._point == point:
             return self._name
         elif self._split_type == 'x':
@@ -1176,16 +1213,21 @@ class TwoDTree(Tree):
                 return self._gt.getname(point)
         return None
 
-    def move_point(self, point: Tuple[int, int], direction: str, steps: int) -> \
-            Optional[Tuple[int, int]]:
-        """ Return the new location of the player at point <point> after moving it
+    def move_point(self, point: Tuple[int, int], direction: str, steps: int) \
+            -> Optional[Tuple[int, int]]:
+        """ Return the new location of the player at point <point> after moving
+        it
         in the given <direction> by <steps> steps.
         Raise an OutOfBoundsError if this would move the player at point
         <point> out of bounds (before moving the player).
-        Raise an OutOfBoundsError if moving the player would place the player at exactly the
-        same coordinates of another player in the Tree (before moving the player).
-        Moving a point may require the tree to be reorganized. This method should do
-        the minimum amount of tree reorganization possible to move the given point properly.
+        Raise an OutOfBoundsError if moving the player would place the player
+        at exactly the
+        same coordinates of another player in the Tree (before moving the pla
+        yer).
+        Moving a point may require the tree to be reorganized. This method
+        should do
+        the minimum amount of tree reorganization possible to move the given
+        point properly.
         Runtime: O(log(n))
         === precondition ===
         direction in ['N', 'S', 'E', 'W']
@@ -1211,11 +1253,16 @@ class TwoDTree(Tree):
 
     def names_in_range(self, point: Tuple[int, int], direction: str,
                        distance: int) -> List[str]:
-        """ Return a list of names of players whose location is in the <direction>
-        relative to <point> and whose location is within <distance> along both the x and y axis.
-        For example: names_in_range((100, 100), 'SE', 10) should return the names of all
-        the players south east of (100, 100) and within 10 steps in either direction.
-        In other words, find all players whose location is in the box with corners at:
+        """ Return a list of names of players whose location is in the
+        <direction>
+        relative to <point> and whose location is within <distance> along
+        both the x and y axis.
+        For example: names_in_range((100, 100), 'SE', 10) should return the
+        names of all
+        the players south east of (100, 100) and within 10 steps in either
+        direction.
+        In other words, find all players whose location is in the box with
+        corners at:
         (100, 100) (110, 100) (100, 110) (110, 110)
         Runtime: faster than O(n) when distance is small
         === precondition ===
@@ -1235,7 +1282,7 @@ class TwoDTree(Tree):
         downr = (max(point[0], endpoint[0]), max(point[1], endpoint[1]))
         downl = (min(point[0], endpoint[0]), max(point[1], endpoint[1]))
         if downl[0] <= self._point[0] <= downr[0] and upl[1] \
-                <= self._point[1] <=downl[1]:
+                <= self._point[1] <= downl[1]:
             lst.append(self._name)
         if self._lt is not None:
             a = self._lt.names_in_range(point, direction, distance)
@@ -1267,7 +1314,8 @@ class TwoDTree(Tree):
 
     def height(self) -> int:
         """ Return the height of <self>
-        Height is measured as the number of nodes in the path from the root of this
+        Height is measured as the number of nodes in the path from the root of
+        this
         tree to the node at the greatest depth in this tree.
         Runtime: O(n)
         >>> t = TwoDTree((0, 0), (100, 100))
@@ -1284,17 +1332,18 @@ class TwoDTree(Tree):
         elif self.is_leaf():
             return 1
         else:
-            a=0
-            b=0
+            a = 0
+            b = 0
             if self._lt is not None:
                 a = self._lt.height()
             if self._gt is not None:
                 b = self._gt.height()
-            total = max(a,b)
+            total = max(a, b)
             return total + 1
 
     def depth(self, tree: Tree) -> Optional[int]:
-        """ Return the depth of the subtree <tree> relative to <self>. Return None
+        """ Return the depth of the subtree <tree> relative to <self>. Return
+        None
         if <tree> is not a descendant of <self>
         Runtime: O(log(n))
         >>> t = TwoDTree((0, 0), (100, 100))
@@ -1325,7 +1374,8 @@ class TwoDTree(Tree):
         return False
 
     def is_empty(self) -> bool:
-        """ Return True if <self> does not store any information about the location
+        """ Return True if <self> does not store any information about the
+        location
         of any players.
         Runtime: O(1)
         """
@@ -1336,7 +1386,8 @@ class TwoDTree(Tree):
         return True
 
     def balance(self) -> None:
-        """ Balance <self> so that there is at most a difference of 1 between the
+        """ Balance <self> so that there is at most a difference of 1 between
+        the
         size of the _lt subtree and the size of the _gt subtree for all trees in
         <self>.
         """
@@ -1344,6 +1395,6 @@ class TwoDTree(Tree):
 
 
 if __name__ == '__main__':
-    """import python_ta
+    import python_ta
 
-    python_ta.check_all(config={'extra-imports': ['typing']})"""
+    python_ta.check_all(config={'extra-imports': ['typing']})
