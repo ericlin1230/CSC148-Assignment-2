@@ -1,6 +1,18 @@
 from __future__ import annotations
 from typing import List, Tuple, Optional, Set
 
+def random_direction() -> List[str]:
+    output = []
+    directions = ['NE', 'NW', 'SW', 'SE']
+    output.append(random.choice(directions))
+    directions.remove(output[0])
+    output.append(random.choice(directions))
+    return output
+
+def random_direction2() -> str:
+    directions = ['N', 'S', 'W', 'E']
+    return random.choice(directions)
+
 class Player:
     _name: str
     _location: Tuple[int, int]
@@ -159,39 +171,82 @@ class Player:
 
         This method should set self._direction to a subset of: ('N', 'S', 'E', 'W')
         """
-        total_targets = []
-        total_enemies = []
-        t1 = []
-        e1 = []
-        t2 = []
-        e2 = []
-        t3 = []
-        e3 = []
-        t4 = []
-        e4 = []
-        for name in self._game.field.names_in_range(self._location, "NE", self._vision):
+        s = set()
+        random_dir = random_direction()
+
+        northpoints = 0
+        southpoints = 0
+        eastpoints = 0
+        westpoints = 0
+
+        targets1 = []
+        enemies1 = []
+
+        targets2 = []
+        enemies2 = []
+
+        for name in self._game.field.names_in_range(self._location, random_dir[0],
+                                                    self._vision):
             if name in self._targets:
-                t1.append(name)
+                targets1.append(name)
             elif name in self._enemies:
-                e1.append(name)
-        for name in self._game.field.names_in_range(self._location, "NW",
+                enemies1.append(name)
+
+        for name in self._game.field.names_in_range(self._location, random_dir[1],
                                                      self._vision):
             if name in self._targets:
-                t2.append(name)
+                targets2.append(name)
             elif name in self._enemies:
-                e2.append(name)
-        for name in self._game.field.names_in_range(self._location, "SW",
-                                                     self._vision):
-            if name in self._targets:
-                t3.append(name)
-            elif name in self._enemies:
-                e3.append(name)
-        for name in self._game.field.names_in_range(self._location, "SE",
-                                                     self._vision):
-            if name in self._targets:
-                t4.append(name)
-            elif name in self._enemies:
-                e4.append(name)
+                enemies2.append(name)
+
+        if 'NE' in random_dir and 'NW' in random_dir:
+            if random_dir[0] == 'NE':
+                northpoints = len(targets1) + len(targets2)
+                southpoints = len(enemies1) + len(enemies2)
+                eastpoints = len(targets1) + len(enemies2)
+                westpoints = len(targets2) + len(enemies1)
+            elif random_dir[0] == 'NW':
+                northpoints = len(targets1) + len(targets2)
+                southpoints = len(enemies1) + len(enemies2)
+                eastpoints = len(targets2) + len(enemies1)
+                westpoints = len(targets1) + len(enemies2)
+        elif 'NE' in random_dir and 'SW' in random_dir:
+            if random_dir[0] == 'NE':
+                northpoints = len(targets1) + len(enemies2)
+                southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(targets1) + len(enemies2)
+                westpoints = len(enemies1) + len(targets2)
+            elif random_dir[0] == 'SW':
+                northpoints = len()
+                southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(targets1) + len(enemies2)
+                westpoints = len(enemies1) + len(targets2)
+
+        # elif 'NE' in random_dir and 'SE' in random_dir:
+        #
+        # elif 'NW' in random_dir and 'SW' in random_dir:
+        #
+        # elif 'NW' in random_dir and 'SE' in random_dir:
+        #
+        # elif 'SW' in random_dir and 'SE' in random_dir:
+
+        # 
+        # if northpoints > (southpoints and eastpoints and westpoints):
+        #     s.add('N')
+        #     return s
+        # elif southpoints > (northpoints and eastpoints and westpoints):
+        #     s.add('S')
+        #     return s
+        # elif eastpoints > (southpoints and northpoints and westpoints):
+        #     s.add('E')
+        #     return s
+        # elif westpoints > (northpoints and southpoints and eastpoints):
+        #     s.add('W')
+        #     return s
+        # 
+        # else:
+        #     s.add(random_direction2())
+        #     return s
 
 
     def move(self) -> None:
