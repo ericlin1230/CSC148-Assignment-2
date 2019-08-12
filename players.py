@@ -189,6 +189,7 @@ class Player:
         targets2 = []
         enemies2 = []
 
+        # Collects targets and names of first direction
         for name in self._game.field.names_in_range(self._location, random_dir[0],
                                                     self._vision):
             if name in self._targets:
@@ -196,6 +197,7 @@ class Player:
             elif name in self._enemies:
                 enemies1.append(name)
 
+        # Collects targets and names of second direction
         for name in self._game.field.names_in_range(self._location, random_dir[1],
                                                      self._vision):
             if name in self._targets:
@@ -203,6 +205,7 @@ class Player:
             elif name in self._enemies:
                 enemies2.append(name)
 
+        # Calculates all possibilities for NSEW points
         if 'NE' in random_dir and 'NW' in random_dir:
             if random_dir[0] == 'NE':
                 northpoints = len(targets1) + len(targets2)
@@ -219,39 +222,118 @@ class Player:
                 northpoints = len(targets1) + len(enemies2)
                 southpoints = len(targets2) + len(enemies1)
                 eastpoints = len(targets1) + len(enemies2)
-                westpoints = len(enemies1) + len(targets2)
+                westpoints = len(targets2) + len(enemies1)
             elif random_dir[0] == 'SW':
-                northpoints = len()
+                northpoints = len(targets2) + len(enemies1)
                 southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(targets2) + len(enemies1)
+                westpoints = len(targets1) + len(enemies2)
+        elif 'NE' in random_dir and 'SE' in random_dir:
+            if random_dir[0] == 'NE':
+                northpoints = len(targets1) + len(enemies2)
+                southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(targets1) + len(targets2)
+                westpoints = len(enemies1) + len(enemies2)
+            elif random_dir[0] == 'SE':
+                northpoints = len(targets2) + len(enemies1)
+                southpoints = len(targets1) + len(enemies2)
+                eastpoints = len(targets1) + len(targets2)
+                westpoints = len(enemies1) + len(enemies2)
+        elif 'NW' in random_dir and 'SW' in random_dir:
+            if random_dir[0] == 'NW':
+                northpoints = len(targets1) + len(enemies2)
+                southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(enemies1) + len(enemies2)
+                westpoints = len(targets1) + len(targets2)
+            elif random_dir[0] == 'SW':
+                northpoints = len(targets2) + len(enemies1)
+                southpoints = len(targets1) + len(enemies2)
+                eastpoints = len(enemies1) + len(enemies2)
+                westpoints = len(targets1) + len(targets2)
+        elif 'NW' in random_dir and 'SE' in random_dir:
+            if random_dir[0] == 'NW':
+                northpoints = len(targets1) + len(enemies2)
+                southpoints = len(targets2) + len(enemies1)
+                eastpoints = len(targets2) + len(enemies1)
+                westpoints = len(targets1) + len(enemies2)
+            elif random_dir[0] == 'SE':
+                northpoints = len(targets2) + len(enemies1)
+                southpoints = len(targets1) + len(enemies2)
                 eastpoints = len(targets1) + len(enemies2)
-                westpoints = len(enemies1) + len(targets2)
+                westpoints = len(targets2) + len(enemies1)
+        elif 'SW' in random_dir and 'SE' in random_dir:
+            if random_dir[0] == 'SW':
+                northpoints = len(enemies1) + len(enemies2)
+                southpoints = len(targets1) + len(targets2)
+                eastpoints = len(targets2) + len(enemies1)
+                westpoints = len(targets1) + len(enemies2)
+            elif random_dir[0] == 'SE':
+                northpoints = len(enemies1) + len(enemies2)
+                southpoints = len(targets1) + len(targets2)
+                eastpoints = len(targets1) + len(enemies2)
+                westpoints = len(targets2) + len(enemies1)
 
-        # elif 'NE' in random_dir and 'SE' in random_dir:
-        #
-        # elif 'NW' in random_dir and 'SW' in random_dir:
-        #
-        # elif 'NW' in random_dir and 'SE' in random_dir:
-        #
-        # elif 'SW' in random_dir and 'SE' in random_dir:
+        # Calculates all possibilities of NSEW points to return best direction(s)
+        if northpoints > (southpoints and eastpoints and westpoints):
+            s.add('N')
+            return s
+        elif southpoints > (northpoints and eastpoints and westpoints):
+            s.add('S')
+            return s
+        elif eastpoints > (southpoints and northpoints and westpoints):
+            s.add('E')
+            return s
+        elif westpoints > (northpoints and southpoints and eastpoints):
+            s.add('W')
+            return s
 
-        #
-        # if northpoints > (southpoints and eastpoints and westpoints):
-        #     s.add('N')
-        #     return s
-        # elif southpoints > (northpoints and eastpoints and westpoints):
-        #     s.add('S')
-        #     return s
-        # elif eastpoints > (southpoints and northpoints and westpoints):
-        #     s.add('E')
-        #     return s
-        # elif westpoints > (northpoints and southpoints and eastpoints):
-        #     s.add('W')
-        #     return s
-        #
-        # else:
-        #     s.add(random_direction2())
-        #     return s
+        elif northpoints < (southpoints and eastpoints and westpoints):
+            s.add('S')
+            s.add('E')
+            s.add('W')
+            return s
+        elif southpoints < (northpoints and eastpoints and westpoints):
+            s.add('N')
+            s.add('E')
+            s.add('W')
+            return s
+        elif eastpoints < (southpoints and northpoints and westpoints):
+            s.add('N')
+            s.add('S')
+            s.add('W')
+            return s
+        elif westpoints < (northpoints and southpoints and eastpoints):
+            s.add('N')
+            s.add('S')
+            s.add('E')
+            return s
 
+        elif northpoints == southpoints and northpoints > (eastpoints and westpoints):
+            s.add('N')
+            s.add('S')
+            return s
+        elif northpoints == westpoints and northpoints > (
+                eastpoints and southpoints):
+            s.add('N')
+            s.add('W')
+            return s
+        elif northpoints == eastpoints and northpoints > (
+                southpoints and westpoints):
+            s.add('N')
+            s.add('E')
+            return s
+        elif eastpoints == southpoints and eastpoints > (
+                northpoints and westpoints):
+            s.add('E')
+            s.add('S')
+        elif eastpoints == westpoints and eastpoints > (
+                northpoints and southpoints):
+            s.add('E')
+            s.add('W')
+
+        else:
+            s.add(random_direction2())
+            return s
 
     def move(self) -> None:
         """ Move <self> in the direction described by self._direction by the number of steps
