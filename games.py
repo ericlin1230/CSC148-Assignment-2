@@ -53,15 +53,33 @@ class Tag(Game):
         self.max_speed = max_speed
         self.max_vision = max_vision
         self._players = {}
-        r = random_names(self.n_players)
-        c = random_coords(self.n_players)
-        for i in range(self.n_players):
-            self._players[r[i]] = Player(r[i], random.randint(0, max_vision),
-                            random.randint(1, max_speed), Tag, 'green', c[i])
-        self._it = pick_random(r)
-        if self._it in self._players:
-            self._players[self._it].set_colour('purple')
-
+        loclist=[]
+        itnum=random.randint(0,self.n_players)
+        namtarget=[]
+        namenemy=[]
+        for i in range(0,self.n_players):
+            name=str(i)
+            while:
+                location=(random.randint(0,500),random.randint(0,500))
+                if location not in loclist:
+                    loclist.append(location)
+                    break
+            if i==itnum:
+                color='purple'
+                namenemy.append(name)
+            else:
+                color='green'
+                namtarget.append(name)
+            vision=random.randint(0,max_vision)
+            speed=random.randint(1,max_speed)
+            self._players[name]=Player(name, vision, speed, self, color, location)
+        for i in self._players:
+            if i.getcolor() == 'green':
+                for item in namenemy:
+                    i.select_enemy(item)
+            elif i.getcolor() == 'purple':
+                for item in namtarget:
+                    i.select_target(item)
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
