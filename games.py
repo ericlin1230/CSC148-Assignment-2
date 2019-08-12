@@ -3,7 +3,28 @@ import random
 from typing import Dict, Union, Optional
 from players import Player
 from trees import QuadTree, TwoDTree
-    
+
+def random_names(n_player) -> List[str]:
+    names = []
+    r = random.sample(range(1, n_player+1), n_player)
+    for name in r:
+        names.append(str(name))
+    return names
+
+def random_coords(n_player):
+    coords = []
+    r1 = random.sample(range(0, 500), n_player)
+    r2 = random.sample(range(0, 500), n_player)
+    for i in range(r1):
+        coords.append((r1[i], r2[i]))
+    return coords
+
+def random_coord(n_player: int):
+    return random.sample(range(0, 500), n_player)
+
+def pick_random(lst):
+    return random.choice(lst)
+
 class Game:
 
     def handle_collision(self, player1: str, player2: str) -> None:
@@ -27,12 +48,22 @@ class Tag(Game):
                        max_speed: int,
                        max_vision: int) -> None:
         self.n_players = n_players
-        self.field = field_type
+        self.field_type = field_type
         self._duration = duration
         self.max_speed = max_speed
         self.max_vision = max_vision
+
+        self.field = TwoDTree()
+
         self._players = {}
-        self._it = ""
+        r = random_names(self.n_players)
+        c = random_coords(self.n_players)
+        for i in range(self.n_players):
+            self._players[r[i]] = Player(r[i], random.randint(0, max_vision), random.randint(1, max_speed), Tag, 'green', c[i])
+        self._it = pick_random(r)
+        if self._it in self._players:
+            self._players[self._it].set_colour('purple')
+
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
