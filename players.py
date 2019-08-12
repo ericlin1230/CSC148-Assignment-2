@@ -90,6 +90,10 @@ class Player:
         """
         self._targets.remove(name)
 
+    def getname(self) -> str:
+        return self.name
+    def getcolor(self)->str:
+        return self._colour
     def get_targets(self) -> List[str]:
         """ Return a copy of the list of target names
         >>> p = Player(None, None, None, None, None, None)
@@ -164,11 +168,8 @@ class Player:
     def next_direction(self) -> Set[str]:
         """ Update the direction to move the next time self.move is called. This direction should be
         determined by the relative number of visible targets and enemies.
-
         Return a set of all equally good directions to move towards.
-
         This method should call the names_in_range Tree method exactly twice.
-
         This method should set self._direction to a subset of: ('N', 'S', 'E', 'W')
         """
         s = set()
@@ -230,7 +231,7 @@ class Player:
         #
         # elif 'SW' in random_dir and 'SE' in random_dir:
 
-        # 
+        #
         # if northpoints > (southpoints and eastpoints and westpoints):
         #     s.add('N')
         #     return s
@@ -243,7 +244,7 @@ class Player:
         # elif westpoints > (northpoints and southpoints and eastpoints):
         #     s.add('W')
         #     return s
-        # 
+        #
         # else:
         #     s.add(random_direction2())
         #     return s
@@ -252,7 +253,6 @@ class Player:
     def move(self) -> None:
         """ Move <self> in the direction described by self._direction by the number of steps
         described by self._speed. Make sure to keep track of the updated location of self.
-
         If the movement would move self out of bounds, move self in the opposite direction instead.
         self should continue to move in this new direction until next_direction is called again.
         >>> p = Player(None, None, 1, None, None, (50, 50))
@@ -322,4 +322,3 @@ class Player:
 if __name__ == '__main__':
     import python_ta
     python_ta.check_all(config={'extra-imports': ['typing']})
-    
