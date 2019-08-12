@@ -59,7 +59,7 @@ class Tag(Game):
         namenemy=[]
         for i in range(0,self.n_players):
             name=str(i)
-            while:
+            while True:
                 location=(random.randint(0,500),random.randint(0,500))
                 if location not in loclist:
                     loclist.append(location)
