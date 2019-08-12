@@ -276,33 +276,37 @@ class Player:
         # Calculates all possibilities of NSEW points to return best direction(s)
         if northpoints > (southpoints and eastpoints and westpoints):
             s.add('N')
+            self._direction = 'N'
             return s
         elif southpoints > (northpoints and eastpoints and westpoints):
             s.add('S')
+            self._direction = 'S'
             return s
         elif eastpoints > (southpoints and northpoints and westpoints):
             s.add('E')
+            self._direction = 'E'
             return s
         elif westpoints > (northpoints and southpoints and eastpoints):
             s.add('W')
+            self._direction = 'W'
             return s
 
-        elif northpoints < (southpoints and eastpoints and westpoints):
+        elif southpoints == eastpoints and southpoints == westpoints and northpoints < (southpoints and eastpoints and westpoints):
             s.add('S')
             s.add('E')
             s.add('W')
             return s
-        elif southpoints < (northpoints and eastpoints and westpoints):
+        elif northpoints == eastpoints and northpoints == westpoints and southpoints < (northpoints and eastpoints and westpoints):
             s.add('N')
             s.add('E')
             s.add('W')
             return s
-        elif eastpoints < (southpoints and northpoints and westpoints):
+        elif southpoints == northpoints and southpoints == westpoints and eastpoints < (southpoints and northpoints and westpoints):
             s.add('N')
             s.add('S')
             s.add('W')
             return s
-        elif westpoints < (northpoints and southpoints and eastpoints):
+        elif northpoints == southpoints and northpoints == eastpoints and westpoints < (northpoints and southpoints and eastpoints):
             s.add('N')
             s.add('S')
             s.add('E')
