@@ -46,7 +46,10 @@ class Player:
         True
         """
         self._colour = colour
-
+        
+    def assignd(self)->None:
+        self._direction=random_direction2()
+        
     def increase_points(self, points: int) -> None:
         """ Increase <self>'s points by <points>
         >>> p = Player(None, None, None, None, None, None)
