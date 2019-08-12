@@ -48,18 +48,16 @@ class Tag(Game):
                        max_speed: int,
                        max_vision: int) -> None:
         self.n_players = n_players
-        self.field_type = field_type
+        self.field = field_type
         self._duration = duration
         self.max_speed = max_speed
         self.max_vision = max_vision
-
-        self.field = TwoDTree()
-
         self._players = {}
         r = random_names(self.n_players)
         c = random_coords(self.n_players)
         for i in range(self.n_players):
-            self._players[r[i]] = Player(r[i], random.randint(0, max_vision), random.randint(1, max_speed), Tag, 'green', c[i])
+            self._players[r[i]] = Player(r[i], random.randint(0, max_vision),
+                            random.randint(1, max_speed), Tag, 'green', c[i])
         self._it = pick_random(r)
         if self._it in self._players:
             self._players[self._it].set_colour('purple')
@@ -67,7 +65,16 @@ class Tag(Game):
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
-        pass
+        self._players[player1].reverse_direction()
+        self._players[player2].reverse_direction()
+        if self._it==self._players[player1].getname():
+            self._it==self._players[player2].getname()
+            self._players[player2].set_colour('purple')
+            self._players[player1].set_colour('green')
+        elif self._it==self._players[player2].getname():
+            self._it==self._players[player1].getname()
+            self._players[player1].set_colour('purple')
+            self._players[player2].set_colour('green')
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
@@ -143,7 +150,23 @@ class ZombieTag(Game):
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
-        raise NotImplementedError
+        if player1 in self._zombies:
+            self._zombies[player1].reverse_direction()
+        if player2 in self._zombies:
+            self._zombies[player2].reverse_direction()
+        if player2 in self._zombies and player1 in self._humans:
+            self._humans[player1].reverse_direction()
+            self._zombies[player1]=self._humans[player1]
+            del self._humans[player1]
+            self._zombies[player1].set_speed(1)
+            self._zombies[player1].set_colour('purple')
+        if player1 in self._zombies and player2 in self._humans:
+            self._humans[player2].reverse_direction()
+            self._zombies[player2]=self._humans[player2]
+            del self._humans[player2]
+            self._zombies[player2].set_speed(1)
+            self._zombies[player2].set_colour('purple')
+
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
@@ -189,7 +212,19 @@ class EliminationTag(Game):
 
     def handle_collision(self, player1: str, player2: str) -> None:
         """ Perform some action when <player1> and <player2> collide """
-        raise NotImplementedError
+        if player1 in self._players[player2].get_targets:
+            for item in self._players[player1].get_targets:
+                self._players[player2].select_target(item)
+            self._players[player2].ignore_target(player1)
+            del self._players[player1]
+        elif player2 in self._players[player1].get_targets:
+            for item in self._players[player2].get_targets:
+                self._players[player1].select_target(item)
+            self._players[player1].ignore_target(player2)
+            del self._players[player2]
+        else:
+            self._players[player1].reverse_direction()
+            self._players[player2].reverse_direction()
 
     def check_for_winner(self) -> Optional[str]:
         """ Return the name of the player or group of players that have
@@ -221,4 +256,3 @@ class EliminationTag(Game):
 if __name__ == '__main__':
     import python_ta
     python_ta.check_all(config={'extra-imports': ['random', 'typing', 'players', 'trees']})
-
