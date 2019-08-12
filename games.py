@@ -74,6 +74,7 @@ class Tag(Game):
             speed=random.randint(1,max_speed)
             self._players[name]=Player(name, vision, speed, self, color, location)
         for i in self._players:
+            self._players[i].assignd()
             if self._players[i].getcolor() == 'green':
                 for item in namenemy:
                     self._players[i].select_enemy(item)
